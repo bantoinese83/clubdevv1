@@ -16,7 +16,9 @@ export function useAnalytics() {
   useEffect(() => {
     // Track page views
     const url = pathname + searchParams.toString()
-    window.plausible("pageview", { props: { url } })
+    if (typeof window.plausible === "function") {
+      window.plausible("pageview", { props: { url } })
+    }
   }, [pathname, searchParams])
 
   const trackEvent = (eventName: string, props?: Record<string, string | number>) => {
@@ -27,4 +29,3 @@ export function useAnalytics() {
 
   return { trackEvent }
 }
-
