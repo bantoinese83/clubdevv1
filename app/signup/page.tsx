@@ -2,13 +2,13 @@
 
 import type React from "react"
 
-import {useState} from "react"
-import {useRouter} from "next/navigation"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
-import {Button} from "@/app/components/ui/Button"
-import {Input} from "@/app/components/ui/Input"
-import {Label} from "@/app/components/ui/Label"
-import {toast} from "react-hot-toast"
+import { Button } from "@/app/components/ui/Button"
+import { Input } from "@/app/components/ui/Input"
+import { Label } from "@/app/components/ui/Label"
+import { toast } from "react-hot-toast"
 
 export default function SignUpPage() {
     const [isLoading, setIsLoading] = useState(false)
@@ -32,8 +32,8 @@ export default function SignUpPage() {
         try {
             const response = await fetch("/api/auth/signup", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({email, password}),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
             })
 
             if (response.ok) {
@@ -62,15 +62,15 @@ export default function SignUpPage() {
             <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
                 <div>
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" name="email" type="email" required/>
+                    <Input id="email" name="email" type="email" required />
                 </div>
                 <div>
                     <Label htmlFor="password">Password</Label>
-                    <Input id="password" name="password" type="password" required/>
+                    <Input id="password" name="password" type="password" required />
                 </div>
                 <div>
                     <Label htmlFor="confirmPassword">Confirm Password</Label>
-                    <Input id="confirmPassword" name="confirmPassword" type="password" required/>
+                    <Input id="confirmPassword" name="confirmPassword" type="password" required />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Creating Account..." : "Sign Up"}
