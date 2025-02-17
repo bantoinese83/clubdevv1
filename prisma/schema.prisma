@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          String    @default("user")
+  bio           String?
+  location      String?
+  website       String?
+  githubProfile String?
+  skills        String[]
+  points        Int       @default(0)
+  badges        Badge[]
+  snippets      Snippet[]
+  comments      Comment[]
+  likes         Like[]
+  followers     User[]    @relation("UserFollows")
+  following     User[]    @relation("UserFollows")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Snippet {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  scripts     Script[]
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  tags        String[]
+  likes       Like[]
+  comments    Comment[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Script {
+  id        String   @id @default(cuid())
+  filename  String
+  language  String
+  code      String
+  snippetId String
+  snippet   Snippet  @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  snippetId String
+  snippet   Snippet  @relation(fields: [snippetId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  snippetId String
+  snippet   Snippet  @relation(fields: [snippetId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, snippetId])
+}
+
+model Badge {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  imageUrl    String
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
